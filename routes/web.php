@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckLogin;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\user\PageController;
+use App\Http\Middleware\checklogintoform;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,11 +41,14 @@ Route::get('info', [PageController::class, 'info'])->name('info');
 
 
 // ------------User&Admin Login--------------
-Route::get('login', [LoginController::class, 'index'])->name('login');
-Route::post('check/login', [LoginController::class, 'login'])->name('check_login');
-Route::get('register', function () {
-    return view('loginManagement.register');
+Route::middleware([checklogintoform::class]) -> group(function(){
+    Route::get('login', [LoginController::class, 'index'])->name('login');
+    Route::post('check/login', [LoginController::class, 'login'])->name('check_login');
+    Route::get('register', function () {
+        return view('loginManagement.register');
+    });
 });
+
 Route::get('logout', [LoginController::class, 'logout'])->name('menu');
 Route::get('admin/logout', [LoginController::class, 'admin_logout'])->name('menu');
 

@@ -50,7 +50,7 @@
                         </div>
 
                         <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <a href="{{route('admin.info')}}" class="dropdown-item notify-item">
                             <i class="dripicons-user"></i>
                             <span>Thông tin tài khoản</span>
                         </a>
@@ -173,7 +173,7 @@
                                 </li>
                                 <li>
                                     <a href="{{route('admin.add-post')}}">Thêm bài viết</a>
-                                </li> 
+                                </li>
                             </ul>
                         </li>
 

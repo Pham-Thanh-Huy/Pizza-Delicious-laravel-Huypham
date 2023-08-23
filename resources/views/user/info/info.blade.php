@@ -2,7 +2,7 @@
 
 
 @section('content')
-<section>
+<section style="background:#fff">
     <div class="container py-5">
 
         <br><br>
@@ -16,7 +16,7 @@
                         <p class="text-muted mb-4">Phòng 25 K5 Bách Khoa Hai Bà Trưng Hà Nội</p>
                     </div>
                 </div>
-               
+
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">

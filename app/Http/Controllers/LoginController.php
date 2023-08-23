@@ -38,7 +38,7 @@ class LoginController extends Controller
     }
 
 
-    
+
     function admin_logout(){
         Auth::logout();
 
