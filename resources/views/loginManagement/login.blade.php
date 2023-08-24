@@ -1,18 +1,22 @@
 @extends('user.layout')
 
-
+<style>
+    .click:hover{
+        color: red;
+    }
+</style>
 
 @section('content')
 <br><br><br><br><br>
 <div class="container">
     <h1 style="text-align:center">Đăng nhập</h1>
-    <form class="login-form" action="{{route('check_login')}}" method="POST">
+    <form class="login-form" action="{{route('check.login')}}" method="POST">
         @csrf
 
 
         <div class="input-group">
             <label for="username">email:</label>
-            <input type="text" id="email" name="email" placeholder="Enter your email">
+            <input type="text" id="email" name="email" placeholder="Enter your email" value="{{old('email')}}">
         </div>
         @if($errors -> has('email'))
         <p style="color: red;">{{$errors -> first('email')}}</p>
@@ -28,6 +32,7 @@
         @if($errors -> has('check'))
         <p style="color: red;">{{$errors -> first('check')}}</p>
         @endif
+        <p style="font-size: 12px;">Nếu bạn chưa có tài khoản. Vui lòng đăng kí <a class="click" href="{{route('register')}}">ở đây</a></p>
         <button type="submit">Login</button>
     </form>
 </div>

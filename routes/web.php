@@ -23,10 +23,10 @@ Route::get('/', [PageController::class, 'index'])->name('home');
 Route::get('blog', [PageController::class, 'blog'])->name('blog');
 
 
-Route::get('detail/blog',[PageController::class, 'detail_blog'] )->name('detail.blog');
+Route::get('detail/blog', [PageController::class, 'detail_blog'])->name('detail.blog');
 
 
-Route::get('about',[PageController::class, 'about'] )->name('about');
+Route::get('about', [PageController::class, 'about'])->name('about');
 
 
 Route::get('contact', [PageController::class, 'contact'])->name('contact');
@@ -41,13 +41,19 @@ Route::get('info', [PageController::class, 'info'])->name('info');
 
 
 // ------------User&Admin Login--------------
-Route::middleware([checklogintoform::class]) -> group(function(){
-    Route::get('login', [LoginController::class, 'index'])->name('login');
-    Route::post('check/login', [LoginController::class, 'login'])->name('check_login');
-    Route::get('register', function () {
-        return view('loginManagement.register');
-    });
+Route::middleware([checklogintoform::class])->group(function () {
+    Route::get('login', [LoginController::class, 'index_login_view'])->name('login');
+    Route::post('check/login', [LoginController::class, 'login'])->name('check.login');
+    Route::get('register', [LoginController::class, 'register_view'])->name('register');
+    Route::post('check/register', [LoginController::class, 'register'])->name('register.add');
+    //view nhập mail để gửi link lấy lại mật khẩu
+    Route::get('forgot/password', [LoginController::class, 'forgotPassword_view'])->name('password.forgot');
+    //view xác nhận email đã tồn tại và gửi đường link
+    Route::post('forgot/sendmail-forgotpassword',  [LoginController::class, 'sendMail_forgotPassword'])->name('password.sendmail');
+    Route::get('reset-password/{token}', [LoginController::class, 'reset_view'])->name('password.reset');
 });
+
+Route::post('update-passsword', [LoginController::class, 'reset_password'])->name('password.update');
 
 Route::get('logout', [LoginController::class, 'logout'])->name('menu');
 Route::get('admin/logout', [LoginController::class, 'admin_logout'])->name('menu');
