@@ -101,7 +101,7 @@ class LoginController extends Controller
             );
 
             return $status === Password::RESET_LINK_SENT ? redirect()->back()->with('status', __('Đường link đã được gửi vào email của bạn. Vui lòng đăng nhập vào email để truy cập vào liên kết đổi mật khẩu.'))
-            :  redirect()->back()->with('status', __('Email chưa được gửi đi vì lỗi. Vui lòng cách 3 phút hãy chọn 1 gmail lấy lại mật khẩu  1 lần'));
+            :  redirect()->back()->with('fail', __('Email chưa được gửi đi vì lỗi. Vui lòng cách 3 phút hãy chọn 1 gmail lấy lại mật khẩu  1 lần'));
         }
     }
 
@@ -117,7 +117,7 @@ class LoginController extends Controller
         // Kiểm tra xem token và email có hợp lệ trong bộ xử lý mật khẩu của Laravel
 
         if (!$user || !Password::broker()->tokenExists($user, $token)) {
-            return redirect('/')->with('fail', __('Token hoặc email không hợp lệ'));
+            return redirect('/')->with('fail', __('Token không hợp lệ hoặc hết hạn'));
         }
 
         return view('loginManagement.password-reset', ['request' => $request]);

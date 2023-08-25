@@ -7,7 +7,7 @@
 </style>
 
 @section('content')
-<br><br><br><br><br>
+<br><br><br>
 @if(session('status'))
         <p style="color: green; background:#eee; text-align:center">{{session('status')}}</p>
     @endif
