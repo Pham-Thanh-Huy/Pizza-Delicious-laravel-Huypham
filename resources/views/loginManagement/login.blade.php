@@ -8,6 +8,13 @@
 
 @section('content')
 <br><br><br><br><br>
+@if(session('status'))
+        <p style="color: green; background:#eee; text-align:center">{{session('status')}}</p>
+    @endif
+
+    @if(session('fail'))
+        <p style="color: red; background:#eee; text-align:center">{{session('fail')}}</p>
+    @endif
 <div class="container">
     <h1 style="text-align:center">Đăng nhập</h1>
     <form class="login-form" action="{{route('check.login')}}" method="POST">
@@ -33,6 +40,7 @@
         <p style="color: red;">{{$errors -> first('check')}}</p>
         @endif
         <p style="font-size: 12px;">Nếu bạn chưa có tài khoản. Vui lòng đăng kí <a class="click" href="{{route('register')}}">ở đây</a></p>
+        <p style="font-size: 12px;">Quên mật Khẩu <a class="click" href="{{route('password.forgot')}}">ấn vào đây</a></p>
         <button type="submit">Login</button>
     </form>
 </div>

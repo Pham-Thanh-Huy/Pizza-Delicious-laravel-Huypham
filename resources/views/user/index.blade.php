@@ -2,6 +2,15 @@
 
 
 @section('content')
+@if(session('fail'))
+    <div class="card bg-danger text-white">
+        <div class="card-body">
+            {{ session('fail') }}
+        </div>
+    </div>
+@endif
+
+
 <section class="home-slider owl-carousel img" style="background-image: url(images/bg_1.jpg);">
 			<div class="slider-item">
 				<div class="overlay"></div>

@@ -8,6 +8,9 @@
     @if(session('status'))
         <p style="color: green; background:#eee; text-align:center">{{session('status')}}</p>
     @endif
+    @if(session('fail'))
+        <p style="color: red; background:#eee; text-align:center">{{session('fail')}}</p>
+    @endif
     <h1 style="text-align:center">Quên mật khẩu</h1>
     <form class="login-form" action="{{route('password.sendmail')}}" method="POST">
         @csrf
@@ -20,7 +23,7 @@
         @if($errors -> has('email'))
         <p style="color: red;">{{$errors -> first('email')}}</p>
         @endif
-        
+
         <button type="submit">Submit</button>
     </form>
 </div>

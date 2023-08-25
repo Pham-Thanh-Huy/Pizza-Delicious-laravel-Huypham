@@ -2,28 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\Login;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Register;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
-
-use Illuminate\Support\Str;
-
 
 class LoginController extends Controller
 {
-    function index_login_view()
+    public function index_login_view()
     {
 
         return view('loginManagement.login');
     }
 
     //check tài khoản người dùng
-    function login(Login $request)
+    public function login(Login $request)
     {
         $credentials = $request->only('email', 'password');
 
@@ -42,12 +38,12 @@ class LoginController extends Controller
     }
 
     // view trang đăng ký
-    function register_view()
+    public function register_view()
     {
         return view('loginManagement.register');
     }
 
-    function logout()
+    public function logout()
     {
         Auth::logout();
 
@@ -55,7 +51,7 @@ class LoginController extends Controller
     }
 
     //xử lý trang đăng ký người dùng
-    function register(Register $request)
+    public function register(Register $request)
     {
         $name = $request->input('username');
         $email = $request->input('email');
@@ -64,8 +60,9 @@ class LoginController extends Controller
         $data = [
             'name' => $name,
             'email' => $email,
-            'password' => bcrypt($password), //mã hóa mật khẩu bằng bcrypt
-            'user_permission' => $user_permission
+            'password' => bcrypt($password),
+            //mã hóa mật khẩu bằng bcrypt
+            'user_permission' => $user_permission,
         ];
         if (User::insert($data)) {
             if (Auth::attempt(['email' => $email, 'password' => $password])) {
@@ -74,20 +71,19 @@ class LoginController extends Controller
         }
     }
 
-
     // Bắt nhập email xác nhận xem người dùng đã có trong hệ thống chưa
-    function forgotPassword_view()
+    public function forgotPassword_view()
     {
         return view('loginManagement.forgot-password');
     }
 
-    function sendMail_forgotPassword(Request $request)
+    public function sendMail_forgotPassword(Request $request)
     {
         $request->validate(
             ['email' => 'required|email'],
             [
                 'email.required' => 'Không được để trống email',
-                'email.email' => 'Định dạng phải là email'
+                'email.email' => 'Định dạng phải là email',
             ]
         );
         // lấy thông tin của người dùng
@@ -99,26 +95,36 @@ class LoginController extends Controller
             return redirect()->back()->withErrors(['email' => 'Email không tồn tại trong hệ thống']);
         } else {
             //khi email đã tồn tại thì gửi link để lấy lại mật khẩu
-            Password::sendResetLink(
+           $status = Password::sendResetLink(
                 $request->only('email'),
 
             );
 
-
-            return redirect()->back()->with('status', __('Đường link đã được gửi vào email của bạn. Vui lòng đăng nhập vào email để truy cập vào liên kết đổi mật khẩu.'));
+            return $status === Password::RESET_LINK_SENT ? redirect()->back()->with('status', __('Đường link đã được gửi vào email của bạn. Vui lòng đăng nhập vào email để truy cập vào liên kết đổi mật khẩu.'))
+            :  redirect()->back()->with('status', __('Email chưa được gửi đi vì lỗi. Vui lòng cách 3 phút hãy chọn 1 gmail lấy lại mật khẩu  1 lần'));
         }
     }
 
     // lấy view sau khi đã có token
-    function reset_view(Request $request)
+    public function reset_view(Request $request)
     {
+        $token = $request->token;
+        $email = $request->email;
+
+        // Tìm đối tượng User bằng email
+        $user = User::where('email', $email)->first();
+
+        // Kiểm tra xem token và email có hợp lệ trong bộ xử lý mật khẩu của Laravel
+
+        if (!$user || !Password::broker()->tokenExists($user, $token)) {
+            return redirect('/')->with('fail', __('Token hoặc email không hợp lệ'));
+        }
+
         return view('loginManagement.password-reset', ['request' => $request]);
     }
 
-
-
     //thay đổi mật khẩu
-    function reset_password(Request $request)
+    public function reset_password(Request $request)
     {
         $request->validate([
             'token' => 'required',
@@ -129,20 +135,19 @@ class LoginController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
+                $user->password = bcrypt($password);
                 $user->save();
 
                 event(new PasswordReset($user));
             }
         );
+
+        return $status === Password::PASSWORD_RESET
+        ? redirect('/login')->with('status', __('Thay đổi mật khẩu thành công'))
+        : redirect()->back()->with('fail', __('Mật khẩu thay đổi không thành công, vui lòng vào lại đường link trên gmail, nếu vẫn không được vui lòng liên hệ với cừa hàng'));
     }
 
-
-
-    function admin_logout()
+    public function admin_logout()
     {
         Auth::logout();
 
