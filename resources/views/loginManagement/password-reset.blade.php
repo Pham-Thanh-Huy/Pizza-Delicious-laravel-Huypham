@@ -20,12 +20,12 @@
 
         <div class="input-group">
             <label for="password">Mật khẩu mới:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password">
         </div>
 
         <div class="input-group">
             <label for="password_confirmation">Xác nhận mật khẩu:</label>
-            <input type="password" id="password_confirmation" name="password_confirmation" required>
+            <input type="password" id="password_confirmation" name="password_confirmation" >
         </div>
 
         @if($errors->has('password'))

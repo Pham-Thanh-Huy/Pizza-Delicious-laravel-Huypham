@@ -95,20 +95,19 @@ class LoginController extends Controller
             return redirect()->back()->withErrors(['email' => 'Email không tồn tại trong hệ thống']);
         } else {
             //khi email đã tồn tại thì gửi link để lấy lại mật khẩu
-           $status = Password::sendResetLink(
+            $status = Password::sendResetLink(
                 $request->only('email'),
 
             );
 
             return $status === Password::RESET_LINK_SENT ? redirect()->back()->with('status', __('Đường link đã được gửi vào email của bạn. Vui lòng đăng nhập vào email để truy cập vào liên kết đổi mật khẩu.'))
-            :  redirect()->back()->with('fail', __('Email chưa được gửi đi vì lỗi. Vui lòng cách 3 phút hãy chọn 1 gmail lấy lại mật khẩu  1 lần'));
+                :  redirect()->back()->with('fail', __('Email chưa được gửi đi vì lỗi. Vui lòng cách 3 phút hãy chọn 1 gmail lấy lại mật khẩu  1 lần'));
         }
     }
 
     // lấy view sau khi đã có token
     public function reset_view(Request $request)
     {
-        $token = $request->token;
         $email = $request->email;
 
         // Tìm đối tượng User bằng email
@@ -116,7 +115,7 @@ class LoginController extends Controller
 
         // Kiểm tra xem token và email có hợp lệ trong bộ xử lý mật khẩu của Laravel
 
-        if (!$user || !Password::broker()->tokenExists($user, $token)) {
+        if (!$user || !Password::tokenExists($user, $request->token)) {
             return redirect('/')->with('fail', __('Token không hợp lệ hoặc hết hạn'));
         }
 
@@ -130,6 +129,11 @@ class LoginController extends Controller
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
+        ], 
+        [
+            'password.required' => 'Mật khẩu không được để trống',
+            'password.min' => 'Mật khẩu phải đủ 8 ký tự',
+            'password.confirmed' => 'Xác nhận mật khẩu không trùng với mật khẩu'
         ]);
 
         $status = Password::reset(
@@ -143,8 +147,8 @@ class LoginController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-        ? redirect('/login')->with('status', __('Thay đổi mật khẩu thành công'))
-        : redirect()->back()->with('fail', __('Mật khẩu thay đổi không thành công, vui lòng vào lại đường link trên gmail, nếu vẫn không được vui lòng liên hệ với cừa hàng'));
+            ? redirect('/login')->with('status', __('Thay đổi mật khẩu thành công'))
+            : redirect()->back()->with('fail', __('Mật khẩu thay đổi không thành công, vui lòng vào lại đường link trên gmail, nếu vẫn không được vui lòng liên hệ với cừa hàng'));
     }
 
     public function admin_logout()
