@@ -5,6 +5,11 @@ use App\Http\Middleware\CheckLogin;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\user\PageController;
 use App\Http\Middleware\checklogintoform;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Middleware\checkLoginEmailVerify;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,48 +22,72 @@ use App\Http\Middleware\checklogintoform;
 */
 
 // ----------------User------------------
-Route::get('/', [PageController::class, 'index'])->name('home');
+Route::middleware([checkLoginEmailVerify::class])->group(
+    function () {
+        Route::get('/', [PageController::class, 'index'])->name('home');
 
 
-Route::get('blog', [PageController::class, 'blog'])->name('blog');
+        Route::get('blog', [PageController::class, 'blog'])->name('blog');
 
 
-Route::get('detail/blog', [PageController::class, 'detail_blog'])->name('detail.blog');
+        Route::get('detail/blog', [PageController::class, 'detail_blog'])->name('detail.blog');
 
 
-Route::get('about', [PageController::class, 'about'])->name('about');
+        Route::get('about', [PageController::class, 'about'])->name('about');
 
 
-Route::get('contact', [PageController::class, 'contact'])->name('contact');
+        Route::get('contact', [PageController::class, 'contact'])->name('contact');
 
 
-Route::get('services', [PageController::class, 'services'])->name('services');
+        Route::get('services', [PageController::class, 'services'])->name('services');
 
-Route::get('menu', [PageController::class, 'menu'])->name('menu');
+        Route::get('menu', [PageController::class, 'menu'])->name('menu');
 
 
-Route::get('info', [PageController::class, 'info'])->name('info');
+        Route::get('info', [PageController::class, 'info'])->name('info');
+    }
+);
 
+
+Route::get('login/fail', function () {
+    if (Auth::check()) {
+        return view('loginManagement.login_fail_email_notverify');
+    } else {
+        return redirect('/');
+    }
+});
 
 // ------------User&Admin Login--------------
 Route::middleware([checklogintoform::class])->group(function () {
     Route::get('login', [LoginController::class, 'index_login_view'])->name('login');
+
     Route::post('check/login', [LoginController::class, 'login'])->name('check.login');
+
     Route::get('register', [LoginController::class, 'register_view'])->name('register');
+
     Route::post('check/register', [LoginController::class, 'register'])->name('register.add');
     //view nhập mail để gửi link lấy lại mật khẩu
     Route::get('forgot/password', [LoginController::class, 'forgotPassword_view'])->name('password.forgot');
     //view xác nhận email đã tồn tại và gửi đường link
     Route::post('forgot/sendmail-forgotpassword',  [LoginController::class, 'sendMail_forgotPassword'])->name('password.sendmail');
+
     Route::get('reset-password/{token}', [LoginController::class, 'reset_view'])->name('password.reset');
 });
 
 Route::post('update-passsword', [LoginController::class, 'reset_password'])->name('password.update');
 
-Route::get('logout', [LoginController::class, 'logout'])->name('menu');
-Route::get('admin/logout', [LoginController::class, 'admin_logout'])->name('menu');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('admin/logout', [LoginController::class, 'admin_logout'])->name('admin.logout');
 
+//check đường link sau khi người dùng click vào xác thực tài khoản 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    if($request -> user() -> hasVerifiedEmail()){
+        return redirect('/') -> with('fail', __('Email đã được xác thực'));
+    }
 
+    $request->fulfill();
+    return redirect('/') -> with('success', __('xác thực email thành công'));
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 
 // -------------------Admin---------------------------

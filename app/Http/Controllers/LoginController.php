@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\Registered;
 
 class LoginController extends Controller
 {
@@ -57,15 +58,22 @@ class LoginController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
         $user_permission = "user";
+
         $data = [
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
-            //mã hóa mật khẩu bằng bcrypt
             'user_permission' => $user_permission,
         ];
+
+        $user = [
+            'email' => $email,
+            'password' => $password,
+        ];
+
         if (User::insert($data)) {
-            if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            if (Auth::attempt($user)) {
+                $request->user()->sendEmailVerificationNotification();
                 return redirect('/');
             }
         }
@@ -125,16 +133,18 @@ class LoginController extends Controller
     //thay đổi mật khẩu
     public function reset_password(Request $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ], 
-        [
-            'password.required' => 'Mật khẩu không được để trống',
-            'password.min' => 'Mật khẩu phải đủ 8 ký tự',
-            'password.confirmed' => 'Xác nhận mật khẩu không trùng với mật khẩu'
-        ]);
+        $request->validate(
+            [
+                'token' => 'required',
+                'email' => 'required|email',
+                'password' => 'required|min:8|confirmed',
+            ],
+            [
+                'password.required' => 'Mật khẩu không được để trống',
+                'password.min' => 'Mật khẩu phải đủ 8 ký tự',
+                'password.confirmed' => 'Xác nhận mật khẩu không trùng với mật khẩu'
+            ]
+        );
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -157,4 +167,8 @@ class LoginController extends Controller
 
         return redirect('/');
     }
+
+
+    // kiểm tra nếu email chưa xác thực thì trả về view
+
 }

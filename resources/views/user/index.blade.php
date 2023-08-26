@@ -2,10 +2,21 @@
 
 
 @section('content')
+
+<!-- nếu người dùng nhập sai token thì không cho -->
 @if(session('fail'))
     <div class="card bg-danger text-white">
         <div class="card-body">
             {{ session('fail') }}
+        </div>
+    </div>
+@endif
+<!-- 
+//kiểm tra xác thực email nếu thành công thì thông báo -->
+@if(session('success'))
+    <div class="card bg-success text-white">
+        <div class="card-body">
+            {{ session('success') }}
         </div>
     </div>
 @endif
