@@ -14,6 +14,23 @@
 
         <!-- Start Content-->
         <div class="container-fluid">
+            <!--  //kiểm tra thêm sản phẩm nếu thất bại thì thông báo -->
+            @if(session('fail'))
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    {{ session('fail') }}
+                </div>
+            </div>
+            @endif
+
+            <!--  //kiểm tra thêm sản phẩm nếu thành công thì thông báo -->
+            @if(session('success'))
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    {{ session('success') }}
+                </div>
+            </div>
+            @endif
 
             <!-- start page title -->
             <div class="row">
@@ -30,32 +47,34 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" action="{{route('admin.add-category-product')}}" method="POST">
+                                @csrf
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label" for="simpleinput">Tên danh mục</label>
                                     <div class="col-lg-10">
-                                        <input type="text" class="form-control" id="simpleinput" value="">
+                                        <input type="text" class="form-control" id="simpleinput" name="name_category_product" value="{{old('name_category_product')}}">
                                     </div>
                                 </div>
 
-
-
-
+                                @if($errors -> has('name_category_product'))
+                                <p style="color: red;">{{$errors -> first('name_category_product')}}</p>
+                                @endif
 
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label">Danh mục cha</label>
                                     <div class="col-lg-10">
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" name="parent_category_product">
+                                            <option value="">Chọn</option>
+                                            <option value="0">Không thuộc danh mục cha nào</option>
+                                            @foreach($category_product as $item)
+                                            <option value="{{$item -> id}}">{{$item -> name}}</option>
+                                            @endforeach
                                         </select>
-
                                     </div>
                                 </div>
-
+                                @if($errors -> has('parent_category_product'))
+                                <p style="color: red;">{{$errors -> first('parent_category_product')}}</p>
+                                @endif
 
                                 <div class="form-group row mb-0 text-right">
                                     <div class="col-lg-10 offset-lg-2">
@@ -75,38 +94,52 @@
 
 
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="header-title">Danh mục sản phẩm</h4><br>
 
-
                             <div class="table-responsive">
-                                <table class="table mb-0">
+                                <table class="table mb-0" width="100%">
                                     <thead>
                                         <tr>
+                                            <th>Stt</th>
                                             <th>ID</th>
                                             <th>Danh mục sản phẩm</th>
                                             <th>Danh mục cha</th>
+                                            <th>Ngày tạo danh mục</th>
+                                            <th>Chức năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- kiểm tra danh mục cha -->
+                                        @php
+                                        $parentCategories = [];
+                                        foreach ($category_product as $category) {
+                                        $parentCategories[$category->id] = $category->name;
+                                        }
+                                        @endphp
+                                        <?php $count = 0; ?> <!-- Khởi tạo biến đếm -->
+                                        @foreach($category_product as $item)
+                                        <?php $count++; ?> <!-- Tăng biến đếm sau mỗi vòng lặp -->
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                        </tr>
+                                            <th>{{$count}}</th>
+                                            <th scope="row">{{$item->id}}</th>
+                                            <th>{{$item->name}}</th>
 
+                                            <!-- kiểm tra danh mục cha nếu không thuộc danh mục cha thì ghi không nếu có danh mục cha thì in ra danh mục cha -->
+                                            <th>
+                                                @if (isset($parentCategories[$item->parent_id]))
+                                                {{ $parentCategories[$item->parent_id] }}
+                                                @else
+                                                Không
+                                                @endif
+                                            </th>
+
+                                            <th>{{$item->created_at}}</th>
+                                            <th><a style="color: green;" href="{{route('admin.change-category-product-view', ['id' => $item -> id])}}">Sửa</a> - <a style="color: red;" href="{{route('admin.delete-category-product', ['id' => $item -> id])}}">Xóa</a></th>
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -114,6 +147,7 @@
                     </div>
                 </div> <!-- end col -->
             </div> <!-- container-fluid -->
+
 
         </div> <!-- content -->
     </div>

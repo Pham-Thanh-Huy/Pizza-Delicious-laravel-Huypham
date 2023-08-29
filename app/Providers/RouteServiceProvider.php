@@ -35,6 +35,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::pattern('id', '[0-9]+'); // Định nghĩa pattern filter cho tham số id
         $this->configureRateLimiting();
 
         $this->routes(function () {

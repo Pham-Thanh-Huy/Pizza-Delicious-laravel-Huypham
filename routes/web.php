@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckLogin;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\user\PageController;
 use App\Http\Middleware\checklogintoform;
-use GuzzleHttp\Psr7\Request;
+use App\Http\Controllers\PostController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Middleware\checkLoginEmailVerify;
 use Illuminate\Support\Facades\Auth;
@@ -81,16 +82,17 @@ Route::get('admin/logout', [LoginController::class, 'admin_logout'])->name('admi
 
 //check đường link sau khi người dùng click vào xác thực tài khoản 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    if($request -> user() -> hasVerifiedEmail()){
-        return redirect('/') -> with('fail', __('Email đã được xác thực'));
+    if ($request->user()->hasVerifiedEmail()) {
+        return redirect('/')->with('fail', __('Email đã được xác thực'));
     }
 
     $request->fulfill();
-    return redirect('/') -> with('success', __('xác thực email thành công'));
+    return redirect('/')->with('success', __('xác thực email thành công'));
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 
 // -------------------Admin---------------------------
+//middleware check admin -user
 Route::middleware([CheckLogin::class])->group(function () {
 
     Route::get('admin/dashboard', function () {
@@ -105,13 +107,20 @@ Route::middleware([CheckLogin::class])->group(function () {
     Route::get('admin/add-product', function () {
         return view('admin.product.add-product');
     })->name('admin.add-product');
+    // ---Trang giao diện danh mục sản phẩm --------
+    Route::get('admin/view-category-product', [ProductController::class, 'category_product_view'])->name('admin.view-category-product');
+    // --- Controller xử lý 
+    Route::post('admin/add-category-product', [ProductController::class, 'add_category_product'])->name('admin.add-category-product');
+    // ----Xóa danh mục sản phẩm
+    Route::get('admin/delete-category-product/{id}', [ProductController::class, 'delete_category_product'])->name('admin.delete-category-product');
 
-    Route::get('admin/add-category-product', function () {
-        return view('admin.product.add-category-product');
-    })->name('admin.add-category-product');
+    // ---- giao diện sửa danh mục sản phẩm
+    Route::get('admin/change-category-product-view/{id}', [ProductController::class, 'change_category_product_view'])->name('admin.change-category-product-view');
+    // ------- controller xử lý sửa danh mục sản phẩm
+    Route::post('admin/change-category-product', [ProductController::class, 'change_category_product'])->name('admin.change-category-product');
     // ------------endProduct-----------
 
-    // -----------Post-------------
+    // -----------Post-------------     
     Route::get('admin/list-post', function () {
         return view('admin.post.list-post');
     })->name('admin.list-post');
@@ -121,15 +130,18 @@ Route::middleware([CheckLogin::class])->group(function () {
     })->name('admin.add-post');
 
 
-    Route::get('admin/add-category-post', function () {
-        return view('admin.post.add-category-post');
-    })->name('admin.add-category-post');
+    // ---Trang giao diện danh mục bài viết--------
+    Route::get('admin/view-category-post', [PostController::class, 'category_post_view'])->name('admin.view-category-post');
+    // --- Controller xử lý 
+    Route::post('admin/add-category-post', [PostController::class, 'add_category_post'])->name('admin.add-category-post');
+    // ----Xóa danh mục bài viết
+    Route::get('admin/delete-category-post/{id}', [PostController::class, 'delete_category_post'])->name('admin.delete-category-post');
 
-
-    Route::get('admin/add-category-post', function () {
-        return view('admin.post.add-category-post');
-    })->name('admin.add-category-post');
-    // ----------endPost----------
+    // ---- giao diện sửa danh mục bài viết
+    Route::get('admin/change-category-post-view/{id}', [PostController::class, 'change_category_post_view'])->name('admin.change-category-post-view');
+    // ------- controller xử lý sửa danh mục bài viết
+    Route::post('admin/change-category-post', [PostController::class, 'change_category_post'])->name('admin.change-category-post');
+    // ----------endPost----------post
 
     // -----------UserManagement && EmployeeManagement----------
     Route::get('admin/employee-management', function () {

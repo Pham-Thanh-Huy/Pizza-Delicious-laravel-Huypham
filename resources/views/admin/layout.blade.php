@@ -97,7 +97,7 @@
             <div class="slimscroll-menu">
 
                 <!-- LOGO -->
-                <a href="index.html" class="logo text-center mb-4">
+                <a href="{{route('admin.dashboard')}}" class="logo text-center mb-4">
                     <span class="logo-lg">
                         <img src="{{asset('assets-admin\images\logo-pizza.png')}}" alt="" height="40">
                     </span>
@@ -149,7 +149,7 @@
                                     <a href="{{route('admin.list-product')}}">Danh sách sản phẩm</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('admin.add-category-product')}}">Danh mục sản phẩm</a>
+                                    <a href="{{route('admin.view-category-product')}}">Danh mục sản phẩm</a>
                                 </li>
                                 <li>
                                     <a href="{{route('admin.add-product')}}">Thêm sản phẩm</a>
@@ -169,7 +169,7 @@
                                     <a href="{{route('admin.list-post')}}">Danh sách bài viết</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('admin.add-category-post')}}">Danh mục bài viết</a>
+                                    <a href="{{route('admin.view-category-post')}}">Danh mục bài viết</a>
                                 </li>
                                 <li>
                                     <a href="{{route('admin.add-post')}}">Thêm bài viết</a>
