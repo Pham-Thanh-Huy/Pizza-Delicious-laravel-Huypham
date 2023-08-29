@@ -39,9 +39,9 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label" for="example-textarea">Mô tả sản phẩm</label>
+                                    <label class="col-lg-2 col-form-label" for="post-textarea">Mô tả sản phẩm</label>
                                     <div class="col-lg-10">
-                                        <textarea class="form-control" rows="5" id="example-textarea"></textarea>
+                                        <textarea class="form-control" id="post-textarea"></textarea>
                                     </div>
                                 </div>
 
@@ -93,5 +93,18 @@
 
     </div> <!-- content -->
 </div>
+
+@endsection
+@section('js-custom')
+<script>
+    ClassicEditor
+        
+        .create(document.querySelector('#post-textarea'))
+        .catch(error => {
+            console.error(error);
+        });
+
+    
+</script>
 
 @endsection

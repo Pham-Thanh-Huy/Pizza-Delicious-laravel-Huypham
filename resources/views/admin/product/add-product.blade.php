@@ -30,58 +30,78 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" enctype="multipart/form-data" action="{{route('admin.add-product')}}"  method="POST">
+                                @csrf
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label" for="simpleinput">Tên sản phẩm</label>
                                     <div class="col-lg-10">
-                                        <input type="text" class="form-control" id="simpleinput" value="">
+                                        <input type="text" name="product_name" class="form-control" id="simpleinput" value="{{old('product_name')}}">
                                     </div>
                                 </div>
+
+                                @if($errors -> has('product_name'))
+                                <p style="color: red;">{{$errors -> first('product_name')}}</p>
+                                @endif
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label" for="example-email">Giá tiền</label>
                                     <div class="col-lg-10">
-                                        <input type="text" class="form-control">
+                                        <input type="text"  value="{{old('product_price')}}"  name="product_price" class="form-control">
                                     </div>
                                 </div>
-                             
+                                    
+                                @if($errors -> has('product_price'))
+                                <p style="color: red;">{{$errors -> first('product_price')}}</p>
+                                @endif
 
                                 <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label" for="example-textarea">Mô tả sản phẩm</label>
+                                    <label class="col-lg-2 col-form-label" for="post-textarea">Mô tả sản phẩm</label>
                                     <div class="col-lg-10">
-                                        <textarea class="form-control" rows="5" id="example-textarea"></textarea>
+                                        <textarea name="product_description" class="form-control" cols="7" id="post-textarea">{{old('product_description')}}</textarea>
                                     </div>
                                 </div>
 
-
+                                
+                                @if($errors -> has('product_description'))
+                                <p style="color: red;">{{$errors -> first('product_description')}}</p>
+                                @endif
 
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label">Danh mục sản phẩm</label>
                                     <div class="col-lg-10">
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" name="category_product">
+                                            <option value="">Chọn</option>
+                                            @foreach($category_product as $item)
+                                            <option value="{{$item -> id}}">{{$item -> name}}</option>
+                                            @endforeach
                                         </select>
 
                                     </div>
                                 </div>
 
-
+                                
+                                @if($errors -> has('category_product'))
+                                <p style="color: red;">{{$errors -> first('category_product')}}</p>
+                                @endif
 
                                 <div class="form-group row mb-0">
                                     <label class="col-lg-2 col-form-label">Ảnh sản phẩm</label>
                                     <div class="col-lg-10">
                                         <div class="input-group">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="inputGroupFile04">
+                                                <input type="file" name="product_img" class="custom-file-input" id="inputGroupFile04">
                                                 <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
                                             </div>
                                         </div>
-                                        <div id="selectedImage" ></div>
+                                        <div id="selectedImage"></div>
                                     </div>
                                 </div>
+
+                                @if($errors -> has('product_img'))
+                                <p style="color: red;">{{$errors -> first('product_img')}}</p>
+                                @endif
+
+
+        
 
                                 <div class="form-group row mb-0 text-right">
                                     <div class="col-lg-10 offset-lg-2">

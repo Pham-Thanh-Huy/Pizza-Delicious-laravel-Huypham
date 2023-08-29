@@ -19,7 +19,8 @@
     <link href="{{ asset('assets/libs/datatables/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
-
+    
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
 </head>
 
@@ -152,7 +153,7 @@
                                     <a href="{{route('admin.view-category-product')}}">Danh mục sản phẩm</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('admin.add-product')}}">Thêm sản phẩm</a>
+                                    <a href="{{route('admin.add-product-view')}}">Thêm sản phẩm</a>
                                 </li>
 
                             </ul>
@@ -235,7 +236,7 @@
     <script src="{{ asset('assets-admin/js/pages/datatables.init.js') }}"></script>
     <script src="{{asset('assets-admin/js/showimage-input.js')}}"></script>
 
-
+    @yield('js-custom')
 
 
 

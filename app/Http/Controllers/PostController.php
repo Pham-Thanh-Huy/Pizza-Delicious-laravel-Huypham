@@ -104,4 +104,8 @@ class PostController extends Controller
             return redirect()->route('admin.view-category-post')->with('error', __('Sửa sản phẩm lỗi, hãy thử lại'));
         }
     }
+
+    function add_product_view(){
+        return view('admin.product.add-product');
+    }
 }

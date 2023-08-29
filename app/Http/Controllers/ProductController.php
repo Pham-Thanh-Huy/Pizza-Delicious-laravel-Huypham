@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category_product;
-
-
+use App\Http\Requests\Product;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ProductModel;
 
 class ProductController extends Controller
 {
@@ -92,7 +93,7 @@ class ProductController extends Controller
 
         $name_category_product = $request->input('name_category_product');
         $parent_category_product = $request->input('parent_category_product');
-        $id = $request -> input('id');
+        $id = $request->input('id');
         $data = [
             'name' => $name_category_product,
             'parent_id' => $parent_category_product
@@ -105,5 +106,46 @@ class ProductController extends Controller
         } else {
             return redirect()->route('admin.view-category-product')->with('error', __('Sửa sản phẩm lỗi, hãy thử lại'));
         }
+    }
+
+        // view  thêm sản phẩm
+    function add_product_view()
+    {
+        $category_product = Category_product::get();
+        return view('admin.product.add-product', compact('category_product'));
+    }
+
+        // Controller xử lý thêm sản phẩm
+    function add_product(Product $request)
+    {
+        $user = Auth::user();
+        $userid = $user ->id;
+        $product_name = $request->input('product_name');
+        $product_price = $request->input('product_price');
+        $product_description = $request->input('product_description');
+        $category_product = $request->input('category_product');
+        if ($request->hasFile('product_img')) {
+            $file = $request->file('product_img');
+            $check =  $file->move('image_product', $file->getClientOriginalName());
+            echo $check;
+        }
+
+        $data = [
+            'category_product_id' => $category_product,
+            'product_name' => $product_name,
+            'price' => $product_price,
+            'product_description' => $product_description,
+            'product_thumb' => $check,
+            'user_id' => $userid
+        ];
+
+        $add_product = ProductModel::create($data);
+
+        if($add_product  == true){
+            return redirect() -> route('admin.list-product') -> with('success', __('Thêm sản phẩm thành công'));
+        }else{
+            return redirect() -> back() -> with('error', __('Thêm sản phẩm thất bại, vui lòng thử lại'));
+        }
+
     }
 }

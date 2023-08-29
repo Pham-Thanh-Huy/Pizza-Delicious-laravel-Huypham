@@ -104,9 +104,10 @@ Route::middleware([CheckLogin::class])->group(function () {
     Route::get('admin/list-product', function () {
         return view('admin.product.list-product');
     })->name('admin.list-product');
-    Route::get('admin/add-product', function () {
-        return view('admin.product.add-product');
-    })->name('admin.add-product');
+    //giao diện thêm sản phẩm
+    Route::get('admin/add-product-view', [ProductController::class,'add_product_view'])->name('admin.add-product-view');
+    // controller xử lý thêm sản phẩm
+    Route::post('admin/add-product', [ProductController::class,'add_product'])->name('admin.add-product');
     // ---Trang giao diện danh mục sản phẩm --------
     Route::get('admin/view-category-product', [ProductController::class, 'category_product_view'])->name('admin.view-category-product');
     // --- Controller xử lý 
