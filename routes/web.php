@@ -126,9 +126,10 @@ Route::middleware([CheckLogin::class])->group(function () {
         return view('admin.post.list-post');
     })->name('admin.list-post');
 
-    Route::get('admin/add-post', function () {
-        return view('admin.post.add-post');
-    })->name('admin.add-post');
+    Route::get('admin/add-post-view', [PostController::class, 'add_post_view'] )->name('admin.add-post-view');
+    Route::post('admin/add-post', [PostController::class, 'add_post'] )->name('admin.add-post');
+    // Controller để dùng ckfinder vào ckeditor
+    Route::post('/upload', [PostController::class, 'upload']) -> name('upload.image');
 
 
     // ---Trang giao diện danh mục bài viết--------

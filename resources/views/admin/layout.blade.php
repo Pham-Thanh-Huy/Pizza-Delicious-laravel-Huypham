@@ -11,16 +11,18 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{asset('assets-admin\images\logo-pizza.png')}}">
 
+
     <!-- App css -->
     <link href="{{ asset('assets-admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets-admin/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets-admin/css/app.min.css') }}" rel="stylesheet" type="text/css">
+    
     <link href="{{ asset('assets/libs/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
+
     
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
 </head>
 
@@ -173,7 +175,7 @@
                                     <a href="{{route('admin.view-category-post')}}">Danh mục bài viết</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('admin.add-post')}}">Thêm bài viết</a>
+                                    <a href="{{route('admin.add-post-view')}}">Thêm bài viết</a>
                                 </li>
                             </ul>
                         </li>
@@ -236,10 +238,9 @@
     <script src="{{ asset('assets-admin/js/pages/datatables.init.js') }}"></script>
     <script src="{{asset('assets-admin/js/showimage-input.js')}}"></script>
 
-    @yield('js-custom')
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-
-
+    @yield('edit-js')
 
 </body>
 

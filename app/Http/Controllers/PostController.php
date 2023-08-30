@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post;
+use App\Models\PostModel;
 use Illuminate\Http\Request;
 use App\Models\Category_post;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -21,7 +24,7 @@ class PostController extends Controller
     {
         $request->validate(
             [
-                'name_category_post' => 'required|regex:/^[\p{L}0-9-_ ]+$/u', 
+                'name_category_post' => 'required|regex:/^[\p{L}0-9-_ ]+$/u',
                 'parent_category_post' => 'required'
             ],
             [
@@ -105,7 +108,59 @@ class PostController extends Controller
         }
     }
 
-    function add_product_view(){
-        return view('admin.product.add-product');
+
+    function add_post_view()
+    {
+        $category_post = Category_post::get();
+        return view('admin.post.add-post', compact('category_post'));
+    }
+
+    // Controller xử lý thêm sản phẩm
+    function add_post(Post $request)
+    {
+        $user = Auth::user();
+        $userid = $user->id;
+        $post_name = $request->input('post_name');
+        $post_price = $request->input('post_price');
+        $post_detail = $request->input('post_detail');
+        $category_post = $request->input('category_post');
+        if ($request->hasFile('post_img')) {
+            $file = $request->file('post_img');
+            $check =  $file->move('image_post', $file->getClientOriginalName());
+            echo $check;
+        }
+
+        $data = [
+            'category_post_id' => $category_post,
+            'post_name' => $post_name,
+            'price' => $post_price,
+            'post_detail' => $post_detail,
+            'post_thumb' => $check,
+            'user_id' => $userid
+        ];
+
+        $add_post = PostModel::create($data);
+
+        if ($add_post  == true) {
+            return redirect()->route('admin.list-post')->with('success', __('Thêm sản phẩm thành công'));
+        } else {
+            return redirect()->back()->with('error', __('Thêm sản phẩm thất bại, vui lòng thử lại'));
+        }
+    }
+
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+
+            $request->file('upload')->move(public_path('media'), $fileName);
+
+            $url = asset('media/' . $fileName);
+            return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
+        }
     }
 }
