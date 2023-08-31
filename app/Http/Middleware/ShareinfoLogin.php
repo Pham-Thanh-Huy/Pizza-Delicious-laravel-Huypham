@@ -24,6 +24,7 @@ class ShareinfoLogin
             View::share('user_name', $user->name);
             View::share('user_email', $user->email);
             View::share('user_password', $user->password);
+            View::share('user_image', $user->user_image);
         }
         return $next($request);
     }

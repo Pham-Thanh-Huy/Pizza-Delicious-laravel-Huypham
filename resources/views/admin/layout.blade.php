@@ -16,13 +16,13 @@
     <link href="{{ asset('assets-admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets-admin/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets-admin/css/app.min.css') }}" rel="stylesheet" type="text/css">
-    
+
     <link href="{{ asset('assets/libs/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/libs/datatables/select.bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
 
-    
+
 
 </head>
 
@@ -38,9 +38,13 @@
 
                 <li class="dropdown notification-list">
                     <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light change" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <img src="{{ asset('assets-admin/images/users/avatar-4.jpg') }}" alt="user-image" class="rounded-circle">
+                        @if($user_image == null)
+                        <img src="{{asset('assets-admin/images/users/avatar-white.jpg')}}" alt="user-image" class="rounded-circle">
+                        @else
+                        <img src="{{asset($user_image)}}" alt="user-image" class="rounded-circle">
+                        @endif
                         <span class="pro-user-name ml-1">
-                           {{$user_name}} <i class="mdi mdi-chevron-down"></i>
+                            {{$user_name}} <i class="mdi mdi-chevron-down"></i>
                         </span>
                     </a>
 
@@ -48,7 +52,7 @@
                         <!-- item-->
                         <div class="dropdown-item noti-title">
                             <h6 class="m-0">
-                               Xin chào!
+                                Xin chào!
                             </h6>
                         </div>
 

@@ -12,11 +12,11 @@
                         <div  class="col-lg-4">
                             <div class="card mb-4">
                                 <div class="card-body text-center">
-                                    <img src="{{ asset('assets-admin/images/users/avatar-4.jpg') }}" alt="avatar"
+                                    <img src="{{ asset($user_image) }}" alt="avatar"
                                         class="rounded-circle img-fluid" style="width: 150px;">
                                     <h5 class="my-3">{{ $user_name }}</h5>
                                     <p class="text-muted mb-1">Admin-pizza-delicious</p>
-                                    <p class="text-muted mb-4">Phòng 25 K5 Bách Khoa Hai Bà Trưng Hà Nội</p>
+                                    <p class="text-muted mb-4">chưa update</p>
                                 </div>
                             </div>
 
@@ -56,7 +56,7 @@
                                             <p class="mb-0">Địa chỉ</p>
                                         </div>
                                         <div class="col-sm-9">
-                                            <p class="text-muted mb-0">Bách khoa Hai Bà Trưng Hà Nội</p>
+                                            <p class="text-muted mb-0">chưa update</p>
                                         </div>
                                     </div>
                                 </div>

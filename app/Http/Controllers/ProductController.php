@@ -11,6 +11,20 @@ use App\Models\ProductModel;
 
 class ProductController extends Controller
 {
+    //view trang danh sách sản phẩm phía admin
+    function index()
+    {
+        $products =  ProductModel::paginate(10);
+        $product = ProductModel::get();
+        $user_upload = []; // Khởi tạo mảng để lưu thông tin user_upload
+
+        foreach ($product as $item) {
+            $user_upload[] = $item->user_upload; // Thêm user_upload vào mảng
+        }
+
+    
+        return view('admin.product.list-product', compact('products', 'user_upload'));
+    }
     //view trang danh mục sản phẩm
     function category_product_view()
     {
@@ -62,7 +76,7 @@ class ProductController extends Controller
         else return redirect()->back()->with('error', __('xóa sản phẩm lỗi, hãy thử lại'));
     }
 
-    //template sửa danh mcuj
+    //template sửa danh mục
     function change_category_product_view($id)
     {
         $category_product = Category_product::get();
@@ -108,18 +122,18 @@ class ProductController extends Controller
         }
     }
 
-        // view  thêm sản phẩm
+    // view  thêm sản phẩm
     function add_product_view()
     {
         $category_product = Category_product::get();
         return view('admin.product.add-product', compact('category_product'));
     }
 
-        // Controller xử lý thêm sản phẩm
+    // Controller xử lý thêm sản phẩm
     function add_product(Product $request)
     {
         $user = Auth::user();
-        $userid = $user ->id;
+        $userid = $user->id;
         $product_name = $request->input('product_name');
         $product_price = $request->input('product_price');
         $product_description = $request->input('product_description');
@@ -141,11 +155,10 @@ class ProductController extends Controller
 
         $add_product = ProductModel::create($data);
 
-        if($add_product  == true){
-            return redirect() -> route('admin.list-product') -> with('success', __('Thêm sản phẩm thành công'));
-        }else{
-            return redirect() -> back() -> with('error', __('Thêm sản phẩm thất bại, vui lòng thử lại'));
+        if ($add_product  == true) {
+            return redirect()->route('admin.list-product')->with('success', __('Thêm sản phẩm thành công'));
+        } else {
+            return redirect()->back()->with('error', __('Thêm sản phẩm thất bại, vui lòng thử lại'));
         }
-
     }
 }

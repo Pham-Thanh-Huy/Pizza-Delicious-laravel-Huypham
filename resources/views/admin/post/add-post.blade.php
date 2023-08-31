@@ -65,7 +65,7 @@
                                 <div class="form-group row">
                                     <label class="col-lg-2 col-form-label" for="post-textarea">Chi tiết bài viết</label>
                                     <div class="col-lg-10">
-                                        <textarea name="post_detail" class="form-control ckeditor"  id="post_detail"></textarea>
+                                        <textarea name="post_detail" class="form-control ckeditor"  id="post_detail">{{old('post_detail')}}</textarea>
                                     </div>
                                 </div>
 

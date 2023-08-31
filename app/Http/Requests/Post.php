@@ -25,7 +25,6 @@ class Post extends FormRequest
     {
         return [
             'post_name' => 'required|regex:/^[\p{L}0-9-_ ]+$/u',
-            'post_price' => 'required|numeric',
             'post_detail' => 'required',
             'category_post' => 'required|numeric',
             'post_img' => 'required|file|mimes:jpg,jpeg,png,gif'
@@ -44,7 +43,6 @@ class Post extends FormRequest
     {
         return [
             'post_name' => 'Tên bài viết',
-            'post_price' => 'Giá tiền',
             'post_detail' => 'Mô tả bài viết',
             'category_post' => 'Danh mục bài viết',
             'post_img' => 'Ảnh bài viết',

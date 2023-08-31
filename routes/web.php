@@ -101,9 +101,7 @@ Route::middleware([CheckLogin::class])->group(function () {
 
     // --------product---------
 
-    Route::get('admin/list-product', function () {
-        return view('admin.product.list-product');
-    })->name('admin.list-product');
+    Route::get('admin/list-product', [ProductController::class, 'index'])->name('admin.list-product');
     //giao diện thêm sản phẩm
     Route::get('admin/add-product-view', [ProductController::class,'add_product_view'])->name('admin.add-product-view');
     // controller xử lý thêm sản phẩm

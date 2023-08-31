@@ -121,7 +121,6 @@ class PostController extends Controller
         $user = Auth::user();
         $userid = $user->id;
         $post_name = $request->input('post_name');
-        $post_price = $request->input('post_price');
         $post_detail = $request->input('post_detail');
         $category_post = $request->input('category_post');
         if ($request->hasFile('post_img')) {
@@ -133,7 +132,6 @@ class PostController extends Controller
         $data = [
             'category_post_id' => $category_post,
             'post_name' => $post_name,
-            'price' => $post_price,
             'post_detail' => $post_detail,
             'post_thumb' => $check,
             'user_id' => $userid
