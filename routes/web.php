@@ -155,3 +155,8 @@ Route::middleware([CheckLogin::class])->group(function () {
         return view('admin.info/info');
     })->name('admin.info');
 });
+
+
+Route::get('cart', function(){
+    return view('user.shoppingcart');
+});

@@ -22,7 +22,7 @@ class ProductController extends Controller
             $user_upload[] = $item->user_upload; // Thêm user_upload vào mảng
         }
 
-    
+
         return view('admin.product.list-product', compact('products', 'user_upload'));
     }
     //view trang danh mục sản phẩm
@@ -140,18 +140,26 @@ class ProductController extends Controller
         $category_product = $request->input('category_product');
         if ($request->hasFile('product_img')) {
             $file = $request->file('product_img');
-            $check =  $file->move('image_product', $file->getClientOriginalName());
-            echo $check;
+            $fileName = $file->getClientOriginalName(); // Lấy tên gốc của tệp
+            $fileExtension = $file->getClientOriginalExtension(); // Lấy phần mở rộng của tệp
+            $newFileName = str_replace('\\', '/', $fileName); // Thay thế dấu \ bằng dấu /
+
+            $filePath = 'image_product/' . $newFileName; // Tạo đường dẫn đến thư mục lưu ảnh mới
+
+            $file->move('image_product', $newFileName); // Di chuyển tệp vào thư mục lưu trữ mới
+
+            $data = [
+                'category_product_id' => $category_product,
+                'product_name' => $product_name,
+                'price' => $product_price,
+                'product_description' => $product_description,
+                'product_thumb' => $filePath, 
+                'user_id' => $userid
+            ];
+
+            // Lưu dữ liệu vào cơ sở dữ liệu
         }
 
-        $data = [
-            'category_product_id' => $category_product,
-            'product_name' => $product_name,
-            'price' => $product_price,
-            'product_description' => $product_description,
-            'product_thumb' => $check,
-            'user_id' => $userid
-        ];
 
         $add_product = ProductModel::create($data);
 
