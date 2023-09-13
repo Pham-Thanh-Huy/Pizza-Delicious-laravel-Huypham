@@ -7,23 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDao {
-    private List<Student> ListStudent;
-    private String filePath;
+    private static List<Student> ListStudent;
 
-    public StudentDao(String filePath) {
-        this.filePath = filePath;
-        loadStudentsFromFile(); // Đọc dữ liệu từ file khi khởi tạo đối tượng StudentDao
+    public StudentDao() {
+        ListStudent = new ArrayList<>();
     }
 
-    // Thêm sinh viên và cập nhật dữ liệu vào file
+    // Thêm danh sách sinh viên
     public boolean addNewStudent(Student student) {
         ListStudent.add(student);
-        saveStudentsToFile();
         System.out.println("Thêm thành công");
         return true;
     }
 
-    // Sửa sinh viên và cập nhật dữ liệu vào file
+    // Sửa sinh viên
     public boolean changeStudent(String nameStudent, String genderStudent, int ageStudent, String rankedAcademicStudent, String id) {
         for (Student std : ListStudent) {
             if (std.getId().equals(id)) {
@@ -31,32 +28,25 @@ public class StudentDao {
                 std.setGender(genderStudent);
                 std.setAge(ageStudent);
                 std.setRankedAcademic(rankedAcademicStudent);
-                saveStudentsToFile();
                 return true;
             }
         }
         return false;
     }
 
-    // Xóa sinh viên và cập nhật dữ liệu vào file
+    // Xóa sinh viên
     public boolean deleteStudent(String id) {
-        Student studentToRemove = null;
         for (Student std : ListStudent) {
             if (std.getId().equals(id)) {
-                studentToRemove = std;
-                break;
+                ListStudent.remove(std);
+                return true;
             }
-        }
-        if (studentToRemove != null) {
-            ListStudent.remove(studentToRemove);
-            saveStudentsToFile();
-            return true;
         }
         return false;
     }
 
     // Lấy sinh viên theo id
-    public Student getStudentById(String id) {
+    public  static Student getStudentById(String id) {
         for (Student std : ListStudent) {
             if (std.getId().equals(id)) {
                 return std;
@@ -66,12 +56,12 @@ public class StudentDao {
     }
 
     // Lấy danh sách sinh viên
-    public List<Student> getListStudent() {
+    public static List<Student> getListStudent() {
         return ListStudent;
     }
 
     // Kiểm tra Id sinh viên đã tồn tại trong hệ thống hay chưa
-    public boolean checkExitsId(String Id) {
+    public static boolean checkExitsId(String Id) {
         for (Student std : ListStudent) {
             if (std.getId().equals(Id)) {
                 return true;
@@ -81,12 +71,12 @@ public class StudentDao {
     }
 
     // Kiểm tra danh sách sinh viên rỗng hay không
-    public boolean isEmptyListStudent() {
+    public static boolean isEmptyListStudent() {
         return ListStudent.isEmpty();
     }
 
     // Ghi danh sách sinh viên vào file
-    private void saveStudentsToFile() {
+    public void saveStudentsToFile(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             for (Student student : ListStudent) {
                 writer.write(student.toString() + "\n");
@@ -97,7 +87,7 @@ public class StudentDao {
     }
 
     // Đọc danh sách sinh viên từ file
-    private void loadStudentsFromFile() {
+    public void loadStudentsFromFile(String filePath) {
         List<Student> students = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -115,35 +105,3 @@ public class StudentDao {
         ListStudent = students;
     }
 }
-
-
-
-
-
-
-
-public class Student {
-    // ...
-    
-    // Phương thức chuyển đổi từ chuỗi thành đối tượng Student
-    public static Student parseFromString(String line) {
-        String[] parts = line.split(",");
-        if (parts.length == 5) {
-            try {
-                String id = parts[0].trim();
-                String name = parts[1].trim();
-                String gender = parts[2].trim();
-                int age = Integer.parseInt(parts[3].trim());
-                String rankedAcademic = parts[4].trim();
-
-                return new Student(id, name, gender, age, rankedAcademic);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        return null; // Trả về null nếu không thể chuyển đổi dòng thành đối tượng Student
-    }
-    
-    // ...
-}
-
