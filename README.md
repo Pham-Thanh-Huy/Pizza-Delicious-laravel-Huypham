@@ -8,19 +8,22 @@ import java.util.List;
 
 public class StudentDao {
     private List<Student> ListStudent;
+    private String filePath;
 
-    public StudentDao() {
-        ListStudent = new ArrayList<>();
+    public StudentDao(String filePath) {
+        this.filePath = filePath;
+        loadStudentsFromFile(); // Đọc dữ liệu từ file khi khởi tạo đối tượng StudentDao
     }
 
-    // Thêm danh sách sinh viên
+    // Thêm sinh viên và cập nhật dữ liệu vào file
     public boolean addNewStudent(Student student) {
         ListStudent.add(student);
+        saveStudentsToFile();
         System.out.println("Thêm thành công");
         return true;
     }
 
-    // Sửa sinh viên
+    // Sửa sinh viên và cập nhật dữ liệu vào file
     public boolean changeStudent(String nameStudent, String genderStudent, int ageStudent, String rankedAcademicStudent, String id) {
         for (Student std : ListStudent) {
             if (std.getId().equals(id)) {
@@ -28,19 +31,26 @@ public class StudentDao {
                 std.setGender(genderStudent);
                 std.setAge(ageStudent);
                 std.setRankedAcademic(rankedAcademicStudent);
+                saveStudentsToFile();
                 return true;
             }
         }
         return false;
     }
 
-    // Xóa sinh viên
+    // Xóa sinh viên và cập nhật dữ liệu vào file
     public boolean deleteStudent(String id) {
+        Student studentToRemove = null;
         for (Student std : ListStudent) {
             if (std.getId().equals(id)) {
-                ListStudent.remove(std);
-                return true;
+                studentToRemove = std;
+                break;
             }
+        }
+        if (studentToRemove != null) {
+            ListStudent.remove(studentToRemove);
+            saveStudentsToFile();
+            return true;
         }
         return false;
     }
@@ -76,7 +86,7 @@ public class StudentDao {
     }
 
     // Ghi danh sách sinh viên vào file
-    public void saveStudentsToFile(String filePath) {
+    private void saveStudentsToFile() {
         try (FileWriter writer = new FileWriter(filePath)) {
             for (Student student : ListStudent) {
                 writer.write(student.toString() + "\n");
@@ -87,7 +97,7 @@ public class StudentDao {
     }
 
     // Đọc danh sách sinh viên từ file
-    public void loadStudentsFromFile(String filePath) {
+    private void loadStudentsFromFile() {
         List<Student> students = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
