@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDao {
-    private List<Student> ListStudent;
+    private static List<Student> ListStudent;
     private String filePath;
 
     public StudentDao() {
@@ -57,7 +57,7 @@ public class StudentDao {
     }
 
     // Lấy sinh viên theo id
-    public Student getStudentById(String id) {
+    public static   Student getStudentById(String id) {
         for (Student std : ListStudent) {
             if (std.getId().equals(id)) {
                 return std;
@@ -67,12 +67,12 @@ public class StudentDao {
     }
 
     // Lấy danh sách sinh viên
-    public List<Student> getListStudent() {
+    public static List<Student> getListStudent() {
         return ListStudent;
     }
 
     // Kiểm tra Id sinh viên đã tồn tại trong hệ thống hay chưa
-    public boolean checkExitsId(String Id) {
+    public static boolean checkExitsId(String Id) {
         for (Student std : ListStudent) {
             if (std.getId().equals(Id)) {
                 return true;
@@ -82,7 +82,7 @@ public class StudentDao {
     }
 
     // Kiểm tra danh sách sinh viên rỗng hay không
-    public boolean isEmptyListStudent() {
+    public static boolean isEmptyListStudent() {
         return ListStudent.isEmpty();
     }
 
