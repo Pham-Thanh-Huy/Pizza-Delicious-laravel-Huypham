@@ -115,3 +115,35 @@ public class StudentDao {
         ListStudent = students;
     }
 }
+
+
+
+
+
+
+
+public class Student {
+    // ...
+    
+    // Phương thức chuyển đổi từ chuỗi thành đối tượng Student
+    public static Student parseFromString(String line) {
+        String[] parts = line.split(",");
+        if (parts.length == 5) {
+            try {
+                String id = parts[0].trim();
+                String name = parts[1].trim();
+                String gender = parts[2].trim();
+                int age = Integer.parseInt(parts[3].trim());
+                String rankedAcademic = parts[4].trim();
+
+                return new Student(id, name, gender, age, rankedAcademic);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return null; // Trả về null nếu không thể chuyển đổi dòng thành đối tượng Student
+    }
+    
+    // ...
+}
+
